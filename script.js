@@ -144,10 +144,25 @@ function moveLeft() {
   console.log(gameGrid);
 }
 
+function moveRight() {
+  console.log("Двигаемся вправо");
+  for (let r = 0; r < 4; r++) {
+    let reversedRow = [...gameGrid[r]].reverse();
+    reversedRow = slideAndCombineRow(reversedRow);
+    gameGrid[r] = reversedRow.reverse();
+  }
+  addRandomTile();
+  renderTiles();
+  console.log(gameGrid);
+}
+
 document.addEventListener('keydown', (e) => {
   console.log('Нажата клавиша:', e.key);
   if (e.key === 'ArrowLeft') {
     moveLeft();
+  }
+  if (e.key === 'ArrowRight') {
+    moveRight();
   }
 });
 
