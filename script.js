@@ -85,19 +85,7 @@ function renderTiles() {
       const tile = document.createElement('div');
       tile.className = 'tile';
       tile.textContent = value;
-      tile.style.position = 'absolute';
-      tile.style.top = '0';
-      tile.style.left = '0';
-      tile.style.width = '100%';
-      tile.style.height = '100%';
-      tile.style.borderRadius = '6px';
-      tile.style.display = 'flex';
-      tile.style.alignItems = 'center';
-      tile.style.justifyContent = 'center';
-      tile.style.fontSize = '24px';
-      tile.style.fontWeight = 'bold';
-      tile.style.color = '#776e65';
-      tile.style.background = '#eee4da';
+      tile.setAttribute('data-value', value);
 
       const cellIndex = r * 4 + c;
       cells[cellIndex].appendChild(tile);
