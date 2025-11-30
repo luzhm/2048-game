@@ -156,14 +156,47 @@ function moveRight() {
   console.log(gameGrid);
 }
 
-document.addEventListener('keydown', (e) => {
-  console.log('Нажата клавиша:', e.key);
-  if (e.key === 'ArrowLeft') {
-    moveLeft();
+function getColumn(colIndex) {
+  return gameGrid.map(row => row[colIndex]);
+}
+
+function setColumn(colIndex, newCol) {
+  for (let r = 0; r < 4; r++) {
+    gameGrid[r][colIndex] = newCol[r];
   }
-  if (e.key === 'ArrowRight') {
-    moveRight();
+}
+
+function moveUp() {
+  console.log("Двигаемся вверх");
+  for (let c = 0; c < 4; c++) {
+    let col = getColumn(c);
+    col = slideAndCombineRow(col);
+    setColumn(c, col);
+  }
+  addRandomTile();
+  renderTiles();
+  console.log(gameGrid);
+}
+
+function moveDown() {
+  console.log("Двигаемся вниз");
+  for (let c = 0; c < 4; c++) {
+    let col = getColumn(c).reverse();
+    col = slideAndCombineRow(col);
+    col.reverse();
+    setColumn(c, col);
+  }
+  addRandomTile();
+  renderTiles();
+  console.log(gameGrid);
+}
+
+
+document.addEventListener('keydown', (e) => {
+  switch(e.key) {
+    case 'ArrowLeft': moveLeft(); break;
+    case 'ArrowRight': moveRight(); break;
+    case 'ArrowUp': moveUp(); break;
+    case 'ArrowDown': moveDown(); break;
   }
 });
-
-renderTiles();
