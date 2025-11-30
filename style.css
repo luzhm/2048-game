@@ -1,2 +1,5 @@
 :root{font-family:Arial, sans-serif}
 body{margin:0;background:#f5f5f5}
+#app {
+    border: 1px dashed #ccc;
+}
