@@ -93,17 +93,40 @@ function renderTiles() {
   }
 }
 
+let score = 0;
+let bestScore = localStorage.getItem('bestScore') || 0;
+
+document.getElementById('best').textContent = `Рекорд: ${bestScore}`;
+
 function slideAndCombineRow(row) {
   let filtered = row.filter(val => val !== 0);
+  let gainedScore = 0;
+
   for (let i = 0; i < filtered.length - 1; i++) {
     if (filtered[i] === filtered[i + 1]) {
       filtered[i] *= 2;
+      gainedScore += filtered[i];  // добавляем очки за слияние
       filtered[i + 1] = 0;
+      i++; // пропускаем следующую плитку, т.к. она уже объединена
     }
   }
   filtered = filtered.filter(val => val !== 0);
   while (filtered.length < 4) filtered.push(0);
+
+  score += gainedScore;
+  updateScore();
+
   return filtered;
+}
+
+function updateScore() {
+  document.getElementById('score').textContent = `Счёт: ${score}`;
+
+  if (score > bestScore) {
+    bestScore = score;
+    localStorage.setItem('bestScore', bestScore);
+    document.getElementById('best').textContent = `Рекорд: ${bestScore}`;
+  }
 }
 
 function addRandomTile() {
