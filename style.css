@@ -134,3 +134,18 @@ body {
   color: #e0e7ff;
   font-size: 16px;
 }
+
+#restart-btn {
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  border: none;
+  background-color: #6b80ff;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+#restart-btn:hover {
+  background-color: #505ee0;
+}

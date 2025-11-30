@@ -245,3 +245,29 @@ document.addEventListener('keydown', (e) => {
   }
 });
 initializeGame();
+
+const restartBtn = document.createElement('button');
+restartBtn.id = 'restart-btn';
+restartBtn.textContent = 'Начать заново';
+
+topPanel.appendChild(restartBtn);
+
+function resetGame() {
+  score = 0;
+  updateScore();
+
+  gameGrid = [];
+  for (let i = 0; i < 4; i++) {
+    gameGrid.push([0, 0, 0, 0]);
+  }
+
+  addRandomTile();
+  addRandomTile();
+
+  renderTiles();
+}
+
+
+restartBtn.addEventListener('click', () => {
+  resetGame();
+});
