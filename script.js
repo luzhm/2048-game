@@ -40,3 +40,31 @@ scoreBox.innerHTML = `
 topPanel.appendChild(scoreBox);
 
 console.log("Заголовок и счет добавлены");
+
+// -------- ШАГ 2.2: Создание игрового поля 4x4 --------
+
+const gridContainer = document.createElement("div");
+gridContainer.id = "grid";
+gridContainer.style.display = "grid";
+gridContainer.style.gridTemplateColumns = "repeat(4, 1fr)";
+gridContainer.style.gap = "10px";
+gridContainer.style.background = "#bbada0";
+gridContainer.style.padding = "10px";
+gridContainer.style.borderRadius = "8px";
+
+app.appendChild(gridContainer);
+
+// Создаем 16 пустых клеток
+for (let i = 0; i < 16; i++) {
+  const cell = document.createElement("div");
+  cell.className = "cell";
+  cell.style.width = "100%";
+  cell.style.paddingBottom = "100%"; // квадрат через aspect ratio
+  cell.style.background = "#cdc1b4";
+  cell.style.borderRadius = "6px";
+  cell.style.position = "relative";
+
+  gridContainer.appendChild(cell);
+}
+
+console.log("Пустое поле 4x4 создано");
