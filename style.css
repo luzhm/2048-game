@@ -1,70 +1,136 @@
-:root{font-family:Arial, sans-serif}
-#app {
-    border: 1px dashed #ccc;
-}
-#top-panel {
-  padding: 10px 0;
-}
-#grid {
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.cell {
-  position: relative;
-}
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  background: #f0e6d2;
+  background: #f0f0f5;
+  font-family: Arial, sans-serif;
 }
 
 #app {
   max-width: 500px;
-  margin: 0 auto;
+  margin: 20px auto;
   padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+#top-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#top-panel h2 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+#score-box {
+  text-align: right;
+}
+
+#score {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#best {
+  font-size: 14px;
+  color: #666;
 }
 
 #grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  background: #bbada0;
+  background: #dcdde6;
   padding: 10px;
   border-radius: 8px;
 }
 
 .cell {
-  background: #cdc1b4;
+  width: 100%;
+  padding-bottom: 100%;
+  background: #e8e9f3;
   border-radius: 6px;
   position: relative;
-  width: 100%;
-  padding-bottom: 100%; /* квадрат */
 }
 
 .tile {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
   font-weight: bold;
-  color: #776e65;
+  font-size: 24px;
   user-select: none;
-  transition: background-color 0.3s ease;
+  transition: background 0.3s ease, color 0.3s ease;
+  color: #1a237e;
 }
 
-.tile[data-value="2"]    { background: #eee4da; color: #776e65; }
-.tile[data-value="4"]    { background: #ede0c8; color: #776e65; }
-.tile[data-value="8"]    { background: #f2b179; color: #f9f6f2; }
-.tile[data-value="16"]   { background: #f59563; color: #f9f6f2; }
-.tile[data-value="32"]   { background: #f67c5f; color: #f9f6f2; }
-.tile[data-value="64"]   { background: #f65e3b; color: #f9f6f2; }
-.tile[data-value="128"]  { background: #edcf72; color: #f9f6f2; }
-.tile[data-value="256"]  { background: #edcc61; color: #f9f6f2; }
-.tile[data-value="512"]  { background: #edc850; color: #f9f6f2; }
-.tile[data-value="1024"] { background: #edc53f; color: #f9f6f2; }
-.tile[data-value="2048"] { background: #edc22e; color: #f9f6f2; }
+/* Цвета плиток в голубо-фиолетовой гамме */
+.tile[data-value="2"] {
+  background: #d0e7ff;
+  color: #1a237e;
+}
+
+.tile[data-value="4"] {
+  background: #a6c8ff;
+  color: #1a237e;
+}
+
+.tile[data-value="8"] {
+  background: #7baaff;
+  color: #e0e7ff;
+}
+
+.tile[data-value="16"] {
+  background: #6b80ff;
+  color: #e0e7ff;
+}
+
+.tile[data-value="32"] {
+  background: #5a5dff;
+  color: #e0e7ff;
+}
+
+.tile[data-value="64"] {
+  background: #6a43ff;
+  color: #e0e7ff;
+}
+
+.tile[data-value="128"] {
+  background: #7c30ff;
+  color: #e0e7ff;
+  font-size: 20px;
+}
+
+.tile[data-value="256"] {
+  background: #8e00ff;
+  color: #e0e7ff;
+  font-size: 20px;
+}
+
+.tile[data-value="512"] {
+  background: #a000ff;
+  color: #e0e7ff;
+  font-size: 20px;
+}
+
+.tile[data-value="1024"] {
+  background: #b633ff;
+  color: #e0e7ff;
+  font-size: 16px;
+}
+
+.tile[data-value="2048"] {
+  background: #ce66ff;
+  color: #e0e7ff;
+  font-size: 16px;
+}

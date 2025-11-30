@@ -1,36 +1,23 @@
 console.log('2048 app — script loaded');
 const h = document.createElement('h1');
 h.textContent = '2048 — загружается...';
-h.style.textAlign = 'center';
-h.style.padding = '20px';
 document.body.prepend(h);
 const app = document.createElement("div");
 app.id = "app";
-app.style.maxWidth = "500px";
-app.style.margin = "0 auto";
-app.style.padding = "20px";
 
 document.body.appendChild(app);
 
 console.log("#app создан");
 const topPanel = document.createElement("div");
 topPanel.id = "top-panel";
-topPanel.style.display = "flex";
-topPanel.style.justifyContent = "space-between";
-topPanel.style.alignItems = "center";
-topPanel.style.marginBottom = "20px";
 
 app.appendChild(topPanel);
 const title = document.createElement("h2");
 title.textContent = "2048";
-title.style.margin = "0";
-title.style.fontSize = "32px";
-title.style.fontWeight = "bold";
 topPanel.appendChild(title);
 
 const scoreBox = document.createElement("div");
 scoreBox.id = "score-box";
-scoreBox.style.textAlign = "right";
 
 scoreBox.innerHTML = `
   <div id="score" style="font-size: 20px; font-weight: bold;">Счёт: 0</div>
@@ -43,35 +30,23 @@ console.log("Заголовок и счет добавлены");
 
 const gridContainer = document.createElement("div");
 gridContainer.id = "grid";
-gridContainer.style.display = "grid";
-gridContainer.style.gridTemplateColumns = "repeat(4, 1fr)";
-gridContainer.style.gap = "10px";
-gridContainer.style.background = "#bbada0";
-gridContainer.style.padding = "10px";
-gridContainer.style.borderRadius = "8px";
 
 app.appendChild(gridContainer);
 
 for (let i = 0; i < 16; i++) {
   const cell = document.createElement("div");
   cell.className = "cell";
-  cell.style.width = "100%";
-  cell.style.paddingBottom = "100%";
-  cell.style.background = "#cdc1b4";
-  cell.style.borderRadius = "6px";
-  cell.style.position = "relative";
 
   gridContainer.appendChild(cell);
 }
 
 console.log("Пустое поле 4x4 создано");
 
-let gameGrid = [
-  [2, 0, 0, 2],
-  [0, 4, 0, 0],
-  [0, 0, 8, 0],
-  [0, 0, 0, 16]
-];
+let gameGrid = [];
+let score = 0;
+let bestScore = localStorage.getItem('bestScore') || 0;
+
+document.getElementById('best').textContent = `Рекорд: ${bestScore}`;
 
 function renderTiles() {
   const cells = gridContainer.querySelectorAll('.cell');
@@ -93,10 +68,15 @@ function renderTiles() {
   }
 }
 
-let score = 0;
-let bestScore = localStorage.getItem('bestScore') || 0;
+function updateScore() {
+  document.getElementById('score').textContent = `Счёт: ${score}`;
 
-document.getElementById('best').textContent = `Рекорд: ${bestScore}`;
+  if (score > bestScore) {
+    bestScore = score;
+    localStorage.setItem('bestScore', bestScore);
+    document.getElementById('best').textContent = `Рекорд: ${bestScore}`;
+  }
+}
 
 function slideAndCombineRow(row) {
   let filtered = row.filter(val => val !== 0);
@@ -119,28 +99,34 @@ function slideAndCombineRow(row) {
   return filtered;
 }
 
-function updateScore() {
-  document.getElementById('score').textContent = `Счёт: ${score}`;
-
-  if (score > bestScore) {
-    bestScore = score;
-    localStorage.setItem('bestScore', bestScore);
-    document.getElementById('best').textContent = `Рекорд: ${bestScore}`;
-  }
-}
-
-function addRandomTile() {
+function getEmptyCells() {
   const emptyCells = [];
   for (let r = 0; r < 4; r++) {
     for (let c = 0; c < 4; c++) {
       if (gameGrid[r][c] === 0) emptyCells.push([r, c]);
     }
   }
+  return emptyCells;
+}
+
+function addRandomTile() {
+  const emptyCells = getEmptyCells();
   if (emptyCells.length === 0) return false;
 
   const [row, col] = emptyCells[Math.floor(Math.random() * emptyCells.length)];
   gameGrid[row][col] = Math.random() < 0.9 ? 2 : 4;
   return true;
+}
+
+function initializeGame() {
+  gameGrid = Array(4).fill(null).map(() => Array(4).fill(0));
+  score = 0;
+  updateScore();
+
+  addRandomTile();
+  addRandomTile();
+
+  renderTiles();
 }
 
 function moveLeft() {
@@ -202,6 +188,53 @@ function moveDown() {
   console.log(gameGrid);
 }
 
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+
+const minSwipeDistance = 30;
+
+gridContainer.addEventListener('touchstart', (e) => {
+  const touch = e.changedTouches[0];
+  touchStartX = touch.clientX;
+  touchStartY = touch.clientY;
+});
+
+gridContainer.addEventListener('touchend', (e) => {
+  const touch = e.changedTouches[0];
+  touchEndX = touch.clientX;
+  touchEndY = touch.clientY;
+
+  handleSwipeGesture();
+});
+
+function handleSwipeGesture() {
+  const deltaX = touchEndX - touchStartX;
+  const deltaY = touchEndY - touchStartY;
+
+  if (Math.abs(deltaX) < minSwipeDistance && Math.abs(deltaY) < minSwipeDistance) {
+    return;
+  }
+
+  if (Math.abs(deltaX) > Math.abs(deltaY)) {
+    if (deltaX > 0) {
+      console.log("Свайп вправо");
+      moveRight();
+    } else {
+      console.log("Свайп влево");
+      moveLeft();
+    }
+  } else {
+    if (deltaY > 0) {
+      console.log("Свайп вниз");
+      moveDown();
+    } else {
+      console.log("Свайп вверх");
+      moveUp();
+    }
+  }
+}
 
 document.addEventListener('keydown', (e) => {
   switch(e.key) {
@@ -211,3 +244,4 @@ document.addEventListener('keydown', (e) => {
     case 'ArrowDown': moveDown(); break;
   }
 });
+initializeGame();
