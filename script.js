@@ -2,6 +2,7 @@ console.log('2048 app — script loaded');
 const h = document.createElement('h1');
 h.textContent = '2048 — загружается...';
 document.body.prepend(h);
+
 const app = document.createElement("div");
 app.id = "app";
 
@@ -12,6 +13,7 @@ const topPanel = document.createElement("div");
 topPanel.id = "top-panel";
 
 app.appendChild(topPanel);
+
 const title = document.createElement("h2");
 title.textContent = "2048";
 topPanel.appendChild(title);
@@ -20,8 +22,8 @@ const scoreBox = document.createElement("div");
 scoreBox.id = "score-box";
 
 scoreBox.innerHTML = `
-  <div id="score" style="font-size: 20px; font-weight: bold;">Счёт: 0</div>
-  <div id="best" style="font-size: 14px; color: #666;">Рекорд: 0</div>
+  <div id="score" ; >Счёт: 0</div>
+  <div id="best" >Рекорд: 0</div>
 `;
 
 topPanel.appendChild(scoreBox);
@@ -36,7 +38,6 @@ app.appendChild(gridContainer);
 for (let i = 0; i < 16; i++) {
   const cell = document.createElement("div");
   cell.className = "cell";
-
   gridContainer.appendChild(cell);
 }
 
@@ -47,6 +48,15 @@ let score = 0;
 let bestScore = localStorage.getItem('bestScore') || 0;
 
 document.getElementById('best').textContent = `Рекорд: ${bestScore}`;
+
+let prevState = null;
+
+function savePrevState() {
+  prevState = {
+    grid: gameGrid.map(row => row.slice()),
+    score: score
+  };
+}
 
 function renderTiles() {
   const cells = gridContainer.querySelectorAll('.cell');
@@ -85,9 +95,9 @@ function slideAndCombineRow(row) {
   for (let i = 0; i < filtered.length - 1; i++) {
     if (filtered[i] === filtered[i + 1]) {
       filtered[i] *= 2;
-      gainedScore += filtered[i];  // добавляем очки за слияние
+      gainedScore += filtered[i];
       filtered[i + 1] = 0;
-      i++; // пропускаем следующую плитку, т.к. она уже объединена
+      i++;
     }
   }
   filtered = filtered.filter(val => val !== 0);
@@ -130,27 +140,29 @@ function initializeGame() {
 }
 
 function moveLeft() {
+  savePrevState();
   console.log("Двигаемся влево");
+
   for (let r = 0; r < 4; r++) {
-    console.log("Старый ряд:", gameGrid[r]);
     gameGrid[r] = slideAndCombineRow(gameGrid[r]);
-    console.log("Новый ряд:", gameGrid[r]);
   }
+
   addRandomTile();
   renderTiles();
-  console.log(gameGrid);
 }
 
 function moveRight() {
+  savePrevState();
   console.log("Двигаемся вправо");
+
   for (let r = 0; r < 4; r++) {
     let reversedRow = [...gameGrid[r]].reverse();
     reversedRow = slideAndCombineRow(reversedRow);
     gameGrid[r] = reversedRow.reverse();
   }
+
   addRandomTile();
   renderTiles();
-  console.log(gameGrid);
 }
 
 function getColumn(colIndex) {
@@ -164,29 +176,34 @@ function setColumn(colIndex, newCol) {
 }
 
 function moveUp() {
+  savePrevState();
   console.log("Двигаемся вверх");
+
   for (let c = 0; c < 4; c++) {
     let col = getColumn(c);
     col = slideAndCombineRow(col);
     setColumn(c, col);
   }
+
   addRandomTile();
   renderTiles();
-  console.log(gameGrid);
 }
 
 function moveDown() {
+  savePrevState();
   console.log("Двигаемся вниз");
+
   for (let c = 0; c < 4; c++) {
     let col = getColumn(c).reverse();
     col = slideAndCombineRow(col);
     col.reverse();
     setColumn(c, col);
   }
+
   addRandomTile();
   renderTiles();
-  console.log(gameGrid);
 }
+
 
 let touchStartX = 0;
 let touchStartY = 0;
@@ -213,28 +230,15 @@ function handleSwipeGesture() {
   const deltaX = touchEndX - touchStartX;
   const deltaY = touchEndY - touchStartY;
 
-  if (Math.abs(deltaX) < minSwipeDistance && Math.abs(deltaY) < minSwipeDistance) {
-    return;
-  }
+  if (Math.abs(deltaX) < minSwipeDistance && Math.abs(deltaY) < minSwipeDistance) return;
 
   if (Math.abs(deltaX) > Math.abs(deltaY)) {
-    if (deltaX > 0) {
-      console.log("Свайп вправо");
-      moveRight();
-    } else {
-      console.log("Свайп влево");
-      moveLeft();
-    }
+    deltaX > 0 ? moveRight() : moveLeft();
   } else {
-    if (deltaY > 0) {
-      console.log("Свайп вниз");
-      moveDown();
-    } else {
-      console.log("Свайп вверх");
-      moveUp();
-    }
+    deltaY > 0 ? moveDown() : moveUp();
   }
 }
+
 
 document.addEventListener('keydown', (e) => {
   switch(e.key) {
@@ -244,30 +248,34 @@ document.addEventListener('keydown', (e) => {
     case 'ArrowDown': moveDown(); break;
   }
 });
+
 initializeGame();
+
 
 const restartBtn = document.createElement('button');
 restartBtn.id = 'restart-btn';
 restartBtn.textContent = 'Начать заново';
-
 topPanel.appendChild(restartBtn);
 
-function resetGame() {
-  score = 0;
-  updateScore();
+restartBtn.addEventListener('click', () => {
+  initializeGame();
+  prevState = null;
+});
 
-  gameGrid = [];
-  for (let i = 0; i < 4; i++) {
-    gameGrid.push([0, 0, 0, 0]);
-  }
 
-  addRandomTile();
-  addRandomTile();
+const undoBtn = document.createElement('button');
+undoBtn.id = 'undo-btn';
+undoBtn.textContent = 'Отмена хода';
+topPanel.appendChild(undoBtn);
+
+undoBtn.addEventListener('click', () => {
+  if (!prevState) return;
+
+  gameGrid = prevState.grid.map(row => row.slice());
+  score = prevState.score;
 
   renderTiles();
-}
+  updateScore();
 
-
-restartBtn.addEventListener('click', () => {
-  resetGame();
+  prevState = null;
 });
