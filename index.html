@@ -1,12 +1,52 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>2048 — Лабораторная</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2048</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <script src="script.js"></script>
+
+<h1>2048</h1>
+<div id="app">
+  <div id="top-panel">
+    <div id="score-box">
+      <div id="score">Счёт: 0</div>
+      <div id="best">Рекорд: 0</div>
+    </div>
+  </div>
+
+  <div id="grid"></div>
+
+  <div id="controls-wrap">
+    <button id="undo-btn">Отмена хода</button>
+    <button id="restart-btn">Начать заново</button>
+    <button id="leaders-btn">Лидеры</button>
+  </div>
+</div>
+
+<div id="gameover-modal">
+  <div class="modal-content">
+    <h3>Игра окончена!</h3>
+    <p>Ваш счёт: <span id="final-score"></span></p>
+    <div class="modal-actions">
+      <input type="text" id="player-name" placeholder="Ваше имя">
+      <button id="save-score-btn">Сохранить рекорд</button>
+    </div>
+  </div>
+</div>
+
+<div id="leaderboard-panel">
+  <div class="lb-content">
+    <h3>Топ игроков</h3>
+    <ol id="leaders-list"></ol>
+    <div class="lb-actions">
+      <button id="close-lb-btn">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
