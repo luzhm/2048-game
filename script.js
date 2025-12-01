@@ -1,4 +1,7 @@
 const gridContainer = document.getElementById('grid');
+gridContainer.addEventListener('touchmove', e => {
+  e.preventDefault();
+}, { passive: false });
 let gameGrid = [];
 let score = 0;
 let bestScore = localStorage.getItem('bestScore') || 0;
