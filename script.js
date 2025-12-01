@@ -91,22 +91,26 @@ function getEmptyCells() {
   return empty;
 }
 
-function addRandomTile() {
+function addRandomTiles(count = 1) {
   const empty = getEmptyCells();
   if (empty.length === 0) return false;
 
-  const [r, c] = empty[Math.floor(Math.random() * empty.length)];
-  gameGrid[r][c] = Math.random() < 0.9 ? 2 : 4;
-  return true;
+  const tilesToAdd = Math.min(count, empty.length);
+  for (let i = 0; i < tilesToAdd; i++) {
+    const index = Math.floor(Math.random() * empty.length);
+    const [r, c] = empty.splice(index, 1)[0];
+    gameGrid[r][c] = Math.random() < 0.9 ? 2 : 4;
+  }
 }
+
 
 function initializeGame() {
   gameGrid = Array(4).fill(null).map(() => Array(4).fill(0));
   score = 0;
   prevState = null;
 
-  addRandomTile();
-  addRandomTile();
+addRandomTiles(Math.floor(Math.random() * 3) + 1);
+
 
   updateScore();
   renderTiles();
@@ -117,7 +121,7 @@ function moveLeft() {
   for (let r = 0; r < 4; r++) {
     gameGrid[r] = slideAndCombineRow(gameGrid[r]);
   }
-  addRandomTile();
+  addRandomTiles(Math.random() < 0.5 ? 1 : 2);
   renderTiles();
   checkGameOver();
 }
@@ -129,7 +133,7 @@ function moveRight() {
     rev = slideAndCombineRow(rev);
     gameGrid[r] = rev.reverse();
   }
-  addRandomTile();
+  addRandomTiles(Math.random() < 0.5 ? 1 : 2);
   renderTiles();
   checkGameOver();
 }
@@ -141,7 +145,7 @@ function moveUp() {
     col = slideAndCombineRow(col);
     setColumn(c, col);
   }
-  addRandomTile();
+  addRandomTiles(Math.random() < 0.5 ? 1 : 2);
   renderTiles();
   checkGameOver();
 }
@@ -154,7 +158,7 @@ function moveDown() {
     col.reverse();
     setColumn(c, col);
   }
-  addRandomTile();
+  addRandomTiles(Math.random() < 0.5 ? 1 : 2);
   renderTiles();
   checkGameOver();
 }
