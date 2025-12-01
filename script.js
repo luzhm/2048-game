@@ -114,6 +114,7 @@ addRandomTiles(Math.floor(Math.random() * 3) + 1);
 
   updateScore();
   renderTiles();
+  localStorage.removeItem('gameState');
 }
 
 function moveLeft() {
@@ -124,6 +125,7 @@ function moveLeft() {
   addRandomTiles(Math.random() < 0.5 ? 1 : 2);
   renderTiles();
   checkGameOver();
+  saveGameState(); 
 }
 
 function moveRight() {
@@ -136,6 +138,7 @@ function moveRight() {
   addRandomTiles(Math.random() < 0.5 ? 1 : 2);
   renderTiles();
   checkGameOver();
+  saveGameState(); 
 }
 
 function moveUp() {
@@ -148,6 +151,7 @@ function moveUp() {
   addRandomTiles(Math.random() < 0.5 ? 1 : 2);
   renderTiles();
   checkGameOver();
+  saveGameState(); 
 }
 
 function moveDown() {
@@ -161,6 +165,7 @@ function moveDown() {
   addRandomTiles(Math.random() < 0.5 ? 1 : 2);
   renderTiles();
   checkGameOver();
+  saveGameState(); 
 }
 
 function checkGameOver() {
@@ -197,9 +202,22 @@ function saveScore() {
   leaderboard.sort((a, b) => b.score - a.score);
   localStorage.setItem('leaderboard', JSON.stringify(leaderboard.slice(0, 10)));
 
-  document.getElementById('gameover-modal').classList.remove('visible');
-  showLeaderboard();
+  const msg = document.getElementById('save-message');
+  msg.style.display = 'block';
+
+  document.getElementById('player-name').style.display = 'none';
+  document.getElementById('save-score-btn').style.display = 'none';
+
+  setTimeout(() => {
+    document.getElementById('gameover-modal').classList.remove('visible');
+    msg.style.display = 'none';
+    document.getElementById('player-name').style.display = 'inline-block';
+    document.getElementById('save-score-btn').style.display = 'inline-block';
+    document.getElementById('player-name').value = '';
+    showLeaderboard();
+  }, 1800);
 }
+
 
 function showLeaderboard() {
   const panel = document.getElementById('leaderboard-panel');
@@ -262,5 +280,17 @@ gridContainer.addEventListener('touchend', e => {
 function saveGameState() {
   localStorage.setItem('gameState', JSON.stringify({ grid: gameGrid, score }));
 }
+function loadGameState() {
+  const saved = JSON.parse(localStorage.getItem('gameState'));
+  if (saved && saved.grid) {
+    gameGrid = saved.grid.map(row => row.slice());
+    score = saved.score || 0;
+    renderTiles();
+    updateScore();
+  } else {
+    initializeGame();
+  }
+}
 
-initializeGame();
+loadGameState();
+
