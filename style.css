@@ -13,6 +13,22 @@ body {
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
+h1 {
+    text-align: center;
+    padding: 20px;
+}
+
+#score {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#best {
+    font-size: 14px;
+    color: #666;
+}
+
+
 #top-panel {
   display: flex;
   justify-content: space-between;
@@ -163,4 +179,216 @@ body {
 
 #undo-btn:hover {
   background-color: #8840e0;
+}
+#gameover-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10,10,10,0.45);
+  z-index: 1000;
+}
+#gameover-modal.visible { display: flex; }
+#gameover-modal .modal-content {
+  background: #fff;
+  padding: 18px;
+  border-radius: 10px;
+  width: 320px;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+#gameover-modal input#player-name {
+  padding: 8px;
+  width: 60%;
+  margin-right: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+#gameover-modal button {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #6b80ff;
+  color: #fff;
+}
+#gameover-modal .modal-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+#leaderboard-panel {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10,10,10,0.35);
+  z-index: 1000;
+}
+#leaderboard-panel.visible { display: flex; }
+#leaderboard-panel .lb-content {
+  background: #fff;
+  padding: 18px;
+  width: 360px;
+  max-width: 95%;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+#leaderboard-panel ol {
+  padding-left: 18px;
+  margin: 12px 0;
+}
+#leaderboard-panel .lb-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+#controls-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+#controls-wrap button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #6b80ff;
+  color: #fff;
+}
+#undo-btn { background: #b86bff; }
+#leaders-btn { background: #4aa3ff; }
+
+@media (max-width: 480px) {
+  #app { margin: 10px; padding: 12px; }
+  #gameover-modal .modal-content, #leaderboard-panel .lb-content { width: 92%; }
+}
+
+#gameover-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10,10,10,0.45);
+  z-index: 1000;
+}
+
+#gameover-modal.visible { display: flex; }
+
+#gameover-modal .modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 320px;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+#gameover-modal h3 {
+  margin-top: 0;
+  font-size: 22px;
+}
+
+#gameover-modal input#player-name {
+  padding: 8px;
+  width: 60%;
+  margin-right: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+#gameover-modal button#save-score-btn {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #6b80ff;
+  color: #fff;
+}
+
+#gameover-modal .modal-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+#leaderboard-panel {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10,10,10,0.35);
+  z-index: 1000;
+}
+
+#leaderboard-panel.visible { display: flex; }
+
+#leaderboard-panel .lb-content {
+  background: #fff;
+  padding: 20px;
+  width: 360px;
+  max-width: 95%;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+#leaderboard-panel h3 {
+  margin-top: 0;
+  font-size: 22px;
+}
+
+#leaderboard-panel ol {
+  padding-left: 18px;
+  margin: 12px 0;
+  text-align: left;
+}
+
+#leaderboard-panel .lb-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+#leaderboard-panel button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #6b80ff;
+  color: #fff;
+}
+
+#controls-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+#controls-wrap button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #6b80ff;
+  color: #fff;
+}
+
+#undo-btn { background: #b86bff; }
+#leaders-btn { background: #4aa3ff; }
+
+@media (max-width: 480px) {
+  #app { margin: 10px; padding: 12px; }
+  #gameover-modal .modal-content,
+  #leaderboard-panel .lb-content { width: 92%; }
 }

@@ -1,6 +1,6 @@
-console.log('2048 app — script loaded');
+console.log('2048');
 const h = document.createElement('h1');
-h.textContent = '2048 — загружается...';
+h.textContent = '2048';
 document.body.prepend(h);
 
 const app = document.createElement("div");
@@ -21,12 +21,18 @@ topPanel.appendChild(title);
 const scoreBox = document.createElement("div");
 scoreBox.id = "score-box";
 
-scoreBox.innerHTML = `
-  <div id="score" ; >Счёт: 0</div>
-  <div id="best" >Рекорд: 0</div>
-`;
+const scoreDiv = document.createElement("div");
+scoreDiv.id = "score";
+scoreDiv.textContent = "Счёт: 0";
+scoreBox.appendChild(scoreDiv);
+
+const bestDiv = document.createElement("div");
+bestDiv.id = "best";
+bestDiv.textContent = "Рекорд: 0";
+scoreBox.appendChild(bestDiv);
 
 topPanel.appendChild(scoreBox);
+
 
 console.log("Заголовок и счет добавлены");
 
@@ -60,7 +66,8 @@ function savePrevState() {
 
 function renderTiles() {
   const cells = gridContainer.querySelectorAll('.cell');
-  cells.forEach(cell => cell.innerHTML = '');
+  cells.forEach(cell => cell.replaceChildren());
+
 
   for (let r = 0; r < 4; r++) {
     for (let c = 0; c < 4; c++) {
@@ -279,3 +286,168 @@ undoBtn.addEventListener('click', () => {
 
   prevState = null;
 });
+
+function checkGameOver() {
+  const emptyCells = getEmptyCells();
+  let canMove = emptyCells.length > 0;
+
+  if (!canMove) {
+    for (let r = 0; r < 4; r++) {
+      for (let c = 0; c < 3; c++) {
+        if (gameGrid[r][c] === gameGrid[r][c + 1]) canMove = true;
+      }
+    }
+    for (let c = 0; c < 4; c++) {
+      for (let r = 0; r < 3; r++) {
+        if (gameGrid[r][c] === gameGrid[r + 1][c]) canMove = true;
+      }
+    }
+  }
+
+  if (!canMove) showGameOverModal();
+}
+
+function showGameOverModal() {
+  let modal = document.getElementById('gameover-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'gameover-modal';
+    
+    const content = document.createElement('div');
+    content.className = 'modal-content';
+    
+    const h3 = document.createElement('h3');
+    h3.textContent = 'Игра окончена!';
+    content.appendChild(h3);
+    
+    const p = document.createElement('p');
+    p.textContent = 'Ваш счёт: ';
+    const span = document.createElement('span');
+    span.id = 'final-score';
+    p.appendChild(span);
+    content.appendChild(p);
+    
+    const actions = document.createElement('div');
+    actions.className = 'modal-actions';
+    
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = 'player-name';
+    input.placeholder = 'Ваше имя';
+    actions.appendChild(input);
+    
+    const saveBtn = document.createElement('button');
+    saveBtn.id = 'save-score-btn';
+    saveBtn.textContent = 'Сохранить рекорд';
+    saveBtn.addEventListener('click', saveScore);
+    actions.appendChild(saveBtn);
+    
+    content.appendChild(actions);
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+  }
+  document.getElementById('final-score').textContent = score;
+  modal.classList.add('visible');
+}
+
+function showLeaderboard() {
+  let panel = document.getElementById('leaderboard-panel');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'leaderboard-panel';
+    
+    const content = document.createElement('div');
+    content.className = 'lb-content';
+    
+    const h3 = document.createElement('h3');
+    h3.textContent = 'Топ игроков';
+    content.appendChild(h3);
+    
+    const ol = document.createElement('ol');
+    ol.id = 'leaders-list';
+    content.appendChild(ol);
+    
+    const actions = document.createElement('div');
+    actions.className = 'lb-actions';
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.id = 'close-lb-btn';
+    closeBtn.textContent = 'Закрыть';
+    closeBtn.addEventListener('click', () => {
+      panel.classList.remove('visible');
+    });
+    actions.appendChild(closeBtn);
+    
+    content.appendChild(actions);
+    panel.appendChild(content);
+    document.body.appendChild(panel);
+  }
+
+  const list = document.getElementById('leaders-list');
+  list.replaceChildren();
+  const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+  leaderboard.forEach(entry => {
+    const li = document.createElement('li');
+    li.textContent = `${entry.name} — ${entry.score}`;
+    list.appendChild(li);
+  });
+  
+  panel.classList.add('visible');
+}
+
+
+function saveScore() {
+  const name = document.getElementById('player-name').value || 'Игрок';
+  const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+  leaderboard.push({ name, score });
+  leaderboard.sort((a,b) => b.score - a.score);
+  localStorage.setItem('leaderboard', JSON.stringify(leaderboard.slice(0,10)));
+  document.getElementById('gameover-modal').classList.remove('visible');
+  showLeaderboard();
+}
+
+
+function moveLeft() {
+  savePrevState();
+  for (let r = 0; r < 4; r++) gameGrid[r] = slideAndCombineRow(gameGrid[r]);
+  addRandomTile();
+  renderTiles();
+  checkGameOver();
+}
+
+function moveRight() {
+  savePrevState();
+  for (let r = 0; r < 4; r++) {
+    let reversedRow = [...gameGrid[r]].reverse();
+    reversedRow = slideAndCombineRow(reversedRow);
+    gameGrid[r] = reversedRow.reverse();
+  }
+  addRandomTile();
+  renderTiles();
+  checkGameOver();
+}
+
+function moveUp() {
+  savePrevState();
+  for (let c = 0; c < 4; c++) {
+    let col = getColumn(c);
+    col = slideAndCombineRow(col);
+    setColumn(c, col);
+  }
+  addRandomTile();
+  renderTiles();
+  checkGameOver();
+}
+
+function moveDown() {
+  savePrevState();
+  for (let c = 0; c < 4; c++) {
+    let col = getColumn(c).reverse();
+    col = slideAndCombineRow(col);
+    col.reverse();
+    setColumn(c, col);
+  }
+  addRandomTile();
+  renderTiles();
+  checkGameOver();
+}
