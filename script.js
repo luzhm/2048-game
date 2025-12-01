@@ -100,8 +100,15 @@ function addRandomTiles(count = 1) {
     const index = Math.floor(Math.random() * empty.length);
     const [r, c] = empty.splice(index, 1)[0];
     gameGrid[r][c] = Math.random() < 0.9 ? 2 : 4;
+    setTimeout(() => {
+      const cells = gridContainer.querySelectorAll('.cell');
+      const cell = cells[r * 4 + c];
+      const tile = cell.querySelector('.tile');
+      if (tile) tile.classList.add('pop');
+    }, 10);
   }
 }
+
 
 
 function initializeGame() {

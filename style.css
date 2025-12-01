@@ -174,3 +174,14 @@ h1 {
   #app { margin: 10px; padding: 12px; }
   .modal-content, .lb-content { width: 92%; }
 }
+
+.tile.pop {
+  transform: scale(0);
+  animation: pop 0.2s forwards;
+}
+
+@keyframes pop {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
