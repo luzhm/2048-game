@@ -95,7 +95,7 @@ h1 {
 
 #controls-wrap {
   display: flex;
-  justify-content: center; /* по центру */
+  justify-content: center;
   gap: 15px;
   margin-bottom: 20px;
 }
@@ -174,3 +174,4 @@ h1 {
   #app { margin: 10px; padding: 12px; }
   .modal-content, .lb-content { width: 92%; }
 }
+
