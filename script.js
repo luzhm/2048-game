@@ -201,7 +201,6 @@ function saveScore() {
   leaderboard.push({ name, score, date: new Date().toLocaleString() });
   leaderboard.sort((a, b) => b.score - a.score);
   localStorage.setItem('leaderboard', JSON.stringify(leaderboard.slice(0, 10)));
-
   const msg = document.getElementById('save-message');
   msg.style.display = 'block';
 
