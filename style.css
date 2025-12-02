@@ -1,0 +1,187 @@
+body {
+  margin: 0;
+  background: #f0f0f5;
+  font-family: Arial, sans-serif;
+}
+
+#app {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+h1 {
+  padding: 20px;
+}
+
+#top-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+#top-panel h2 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+#score-box {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#score, #best {
+  display: inline-block;
+  text-align: center;
+}
+
+#grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  background: #dcdde6;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.cell {
+  width: 100%;
+  padding-bottom: 100%;
+  background: #e8e9f3;
+  border-radius: 6px;
+  position: relative;
+}
+
+.tile {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 24px;
+  user-select: none;
+  transition: background 0.3s ease, color 0.3s ease;
+  color: #1a237e;
+}
+
+/* Цвета плиток */
+.tile[data-value="2"] { background: #d0e7ff; color: #1a237e; }
+.tile[data-value="4"] { background: #a6c8ff; color: #1a237e; }
+.tile[data-value="8"] { background: #7baaff; color: #e0e7ff; }
+.tile[data-value="16"] { background: #6b80ff; color: #e0e7ff; }
+.tile[data-value="32"] { background: #5a5dff; color: #e0e7ff; }
+.tile[data-value="64"] { background: #6a43ff; color: #e0e7ff; }
+.tile[data-value="128"] { background: #7c30ff; color: #e0e7ff; font-size: 20px; }
+.tile[data-value="256"] { background: #8e00ff; color: #e0e7ff; font-size: 20px; }
+.tile[data-value="512"] { background: #a000ff; color: #e0e7ff; font-size: 20px; }
+.tile[data-value="1024"] { background: #b633ff; color: #e0e7ff; font-size: 16px; }
+.tile[data-value="2048"] { background: #ce66ff; color: #e0e7ff; font-size: 16px; }
+
+#controls-wrap {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+#controls-wrap button {
+  padding: 10px 14px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 6px;
+  border: none;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+
+#restart-btn { background-color: #6b80ff; }
+#restart-btn:hover { background-color: #505ee0; }
+
+#undo-btn { background-color: #b86bff; }
+#undo-btn:hover { background-color: #8840e0; }
+
+#leaders-btn { background-color: #4aa3ff; }
+#leaders-btn:hover { background-color: #2a82e0; }
+
+#gameover-modal,
+#leaderboard-panel {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10,10,10,0.35);
+  z-index: 1000;
+}
+
+#gameover-modal.visible,
+#leaderboard-panel.visible { display: flex; }
+
+.modal-content, .lb-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 320px;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-content h3, .lb-content h3 { margin-top: 0; font-size: 22px; }
+
+#gameover-modal input#player-name {
+  padding: 8px;
+  width: 60%;
+  margin-right: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.modal-actions button#save-score-btn {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background-color: #8e44ff;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+
+.modal-actions button#save-score-btn:hover {
+  background-color: #6b00d6;
+}
+
+
+#leaderboard-panel ol { padding-left: 18px; margin: 12px 0; text-align: left; }
+
+@media (max-width: 480px) {
+  #app { margin: 10px; padding: 12px; }
+  .modal-content, .lb-content { width: 92%; }
+}
+
+.tile.pop {
+  transform: scale(0);
+  animation: pop 0.2s forwards;
+}
+
+@keyframes pop {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
